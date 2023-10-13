@@ -1,0 +1,8 @@
+Package: python3-pyusb
+Version: 1.2.1
+Architecture: all
+Maintainer: Alex <alexkucherenko3@gmail.com>
+Depends: python3 (>= 3.6), python3-pip, python3-setuptools, libusb-1.0-0
+Section: python
+Priority: optional
+Description: python module PyUsb

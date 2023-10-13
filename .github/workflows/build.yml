@@ -1,0 +1,46 @@
+name: Build DEB Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y dpkg build-essential dh-make debhelper devscripts
+
+    - name: Initialize and update submodules
+      run: |
+        git submodule update --init --recursive
+
+    - name: Debug Current Directory
+      run: |
+        pwd
+        ls -l
+
+    - name: Build DEB Package
+      run: |
+        dpkg-deb -b debian python3-pyusb.deb
+        mv python3-pyusb.deb $GITHUB_WORKSPACE/python3-pyusb_1.2.1_all.deb
+
+    - name: Upload DEB Package
+      uses: actions/upload-artifact@v2
+      with:
+        name: debian-package
+        path: $GITHUB_WORKSPACE/python3-pyusb_1.2.1_all.deb
+      env:
+        GITHUB_TOKEN: ${{ secrets.ALEX_SECRET }}
